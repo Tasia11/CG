@@ -1,0 +1,63 @@
+<HTML>
+<BODY>
+<canvas id='homework01' width='400px' height='400px' style='border:20px groove #8bb1c4'>
+</canvas>
+<script>
+
+    function Line_bresenham(ctx, xstart, ystart, xend, yend, color) {
+        ctx.fillStyle = color;
+        let x = xstart, y = ystart;
+        let eps = 0;
+        let signx = (xend - xstart) / Math.abs(xend - xstart);
+        let signy = (yend - ystart) / Math.abs(yend - ystart);
+
+
+        if (Math.abs(xend - xstart) > Math.abs(yend - ystart)) {
+
+            while (x != xend) {
+                eps += +2 * (yend - ystart);
+                if (Math.abs(eps) >= Math.abs(xend - xstart)) {
+                    y += signy;
+                    eps -= signy * signx * (xend - xstart) * 2;
+                }
+                ctx.fillRect(x, y, 2, 2);
+                x += signx;
+            }
+        }
+
+        while (y != yend) {
+            eps = eps + 2 * (xend - xstart);
+            if (Math.abs(eps) >= Math.abs(yend - ystart)) {
+                x += signx;
+                eps = eps - signy * signx * (yend - ystart) * 2;
+            }
+            ctx.fillRect(x, y, 2, 2);
+            y += signy;
+        }
+
+    }
+
+    function Clock(xstart, ystart, radius) {
+        let angle = ((new Date()).getSeconds() * 6) % 360;
+        let xend = Math.abs(Math.trunc(xstart + radius * Math.cos(angle * Math.PI / 180)));
+        let yend = Math.abs(Math.trunc(ystart + radius * Math.sin(angle * Math.PI / 180)));
+        Line_bresenham(ctx, xstart, ystart, xend, yend, "#800000");
+        setTimeout(function () {
+            Line_bresenham(ctx, xstart, ystart, xend, yend, "#fff")
+        }, 1000)
+    }
+
+    let canvas = document.getElementById('homework01');
+    let ctx = canvas.getContext('2d');
+    let xstart = 200, ystart = 200, radius = 180, radiusCircle = 185;
+    ctx.beginPath();
+    ctx.arc(xstart, ystart, radiusCircle, 0, 2 * Math.PI);
+    ctx.lineWidth = 10;
+    ctx.strokeStyle = "#a52a2a";
+    ctx.stroke();
+    setInterval(function () {
+        Clock(xstart, ystart, radius)
+    }, 1000);
+</script>
+</BODY>
+</HTML>
